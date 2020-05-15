@@ -9,6 +9,15 @@ void PrintStr(INT_LONG str) {
     puts("");
 }
 
+void Clean(INT_LONG num) {
+    if (num.size > 0) {
+        for (int i = num.size - 1; i <= 0; i++) {
+            free(num.data[i]);
+        }
+        free(num.data);
+    }
+}
+
 INT_LONG RandString(int size) {
     INT_LONG NUM;
     NUM.data = (char*)malloc(size * sizeof(char));
@@ -137,7 +146,7 @@ INT_LONG NaiveMULT(INT_LONG num, char n, int pos) {
     return RES;
 }
 
-void Naive(INT_LONG num1, INT_LONG num2) {
+INT_LONG Naive(INT_LONG num1, INT_LONG num2) {
     INT_LONG RES;
     RES.size = 0;
     for (int i = 0; i < num2.size; i++) {
@@ -148,11 +157,11 @@ void Naive(INT_LONG num1, INT_LONG num2) {
         else
             RES = Addition(R, RES);
     }
-    puts("NAIVE:");
-    PrintStr(RES);
+    return RES;
 }
 
-INT_LONG Divide(INT_LONG res, INT_LONG num, int first, int last) {
+INT_LONG Divide(INT_LONG num, int first, int last) {
+    INT_LONG res;
     res.size = 0;
     if (first < num.size) {
         int i = 0;
@@ -201,10 +210,10 @@ INT_LONG SimpleDNC(INT_LONG num1, INT_LONG num2) {
     }
     else {
         INT_LONG xR, xL, yR, yL;
-        xR = Divide(xR, num1, 0, n/2);
-        xL = Divide(xL, num1, n/2, n);
-        yR = Divide(yR, num2, 0, n/2);
-        yL = Divide(yL, num2, n/2, n);
+        xR = Divide(num1, 0, n/2);
+        xL = Divide(num1, n/2, n);
+        yR = Divide(num2, 0, n/2);
+        yL = Divide(num2, n/2, n);
         INT_LONG x1 = SimpleDNC(xL, yL);
         INT_LONG x2 = SimpleDNC(xL, yR);
         INT_LONG x3 = SimpleDNC(xR, yL);
@@ -228,7 +237,7 @@ INT_LONG SimpleDNC(INT_LONG num1, INT_LONG num2) {
     }
 }
 
-INT_LONG KarDNC(INT_LONG num1, INT_LONG num2) {
+INT_LONG KaratsubaDNC(INT_LONG num1, INT_LONG num2) {
     INT_LONG RES;
     int n;
     if (num1.size > num2.size)
@@ -260,10 +269,10 @@ INT_LONG KarDNC(INT_LONG num1, INT_LONG num2) {
     }
     else {
         INT_LONG xR, xL, yR, yL;
-        xR = Divide(xR, num1, 0, n/2);
-        xL = Divide(xL, num1, n/2, n);
-        yR = Divide(yR, num2, 0, n/2);
-        yL = Divide(yL, num2, n/2, n);
+        xR = Divide(num1, 0, n/2);
+        xL = Divide(num1, n/2, n);
+        yR = Divide(num2, 0, n/2);
+        yL = Divide(num2, n/2, n);
         INT_LONG x1 = SimpleDNC(xL, yL);
         INT_LONG x2;
         if (xL.size > xR.size) {

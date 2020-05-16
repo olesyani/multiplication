@@ -21,4 +21,5 @@ INT_LONG Naive(INT_LONG num1, INT_LONG num2); //naive multiplication alg
 INT_LONG Divide(INT_LONG num, int first, int last); //splitting numbers for simple DNC & karatsuba algs
 INT_LONG SimpleDNC(INT_LONG num1, INT_LONG num2); //simple DNC alg
 INT_LONG KaratsubaDNC(INT_LONG num1, INT_LONG num2); //karatsuba alg
+INT_LONG Grid(INT_LONG num1, INT_LONG num2); //grid alg
 #endif

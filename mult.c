@@ -330,3 +330,51 @@ INT_LONG KaratsubaDNC(INT_LONG num1, INT_LONG num2) {
         return RES;
     }
 }
+
+INT_LONG Grid(INT_LONG num1, INT_LONG num2) {
+    char MATRIX[num1.size][num2.size];
+    for (int i = 0; i < num1.size; i++) {
+        for (int j = 0; j < num2.size; j++) {
+            MATRIX[i][j] = num1.data[i] * num2.data[j];
+        }
+    }
+    //char DIAGONAL_SUM[num1.size + num2.size - 1];
+    INT_LONG DIAGONAL_SUM;
+    DIAGONAL_SUM.data = (char*)malloc((num1.size + num2.size - 1) * sizeof(char));
+    DIAGONAL_SUM.size = num1.size + num2.size - 1;
+    long int previous = 0;
+    int n = 0;
+    for (int i = 0; i < num1.size; i++) {
+        int k = i;
+        long int add = 0;
+        for (int j = 0; j < num2.size && k >= 0; j++, k--) {
+            add += MATRIX[k][j];
+        }
+        add += previous;
+        previous = add / 10;
+        add = add % 10;
+        DIAGONAL_SUM.data[n] = add;
+        n++;
+    }
+    for (int k = 1; k < num2.size; k++) {
+        int i = num1.size - 1;
+        int j = k;
+        int add = 0;
+        while (j < num2.size && i >= 0) {
+            add += MATRIX[i][j];
+            j++;
+            i--;
+        }
+        add += previous;
+        previous = add / 10;
+        add = add % 10;
+        DIAGONAL_SUM.data[n] = add;
+        n++;
+    }
+    if (previous > 0) {
+        DIAGONAL_SUM.data[n] = (char)malloc(1 * sizeof(char));
+        DIAGONAL_SUM.data[n] = previous;
+        DIAGONAL_SUM.size += 1;
+    }
+    return DIAGONAL_SUM;
+}

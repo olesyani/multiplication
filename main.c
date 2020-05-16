@@ -33,5 +33,13 @@ int main() {
     PrintStr(A);
     Clean(A);
     printf("The time is %f sec\n", t);
+    
+    s = clock();
+    A = Grid(NUM1, NUM2);
+    t = clock() - s / CLOCKS_PER_SEC;
+    puts("GRID:");
+    PrintStr(A);
+    Clean(A);
+    printf("The time is %f sec\n", t);
     return 0;
 }

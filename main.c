@@ -12,33 +12,33 @@ int main() {
     
     clock_t s = clock();
     A = Naive(NUM1, NUM2);
-    double t = clock() - s / CLOCKS_PER_SEC;
+    double t = (clock() - s) / CLOCKS_PER_SEC;
     puts("NAIVE:");
-    PrintStr(A);
-    Clean(A);
-    printf("The time is %f sec\n", t);
-    
-    s = clock();
-    A = SimpleDNC(NUM1, NUM2);
-    t = clock() - s / CLOCKS_PER_SEC;
-    puts("SIMPLE DNC:");
-    PrintStr(A);
-    Clean(A);
-    printf("The time is %f sec\n", t);
-    
-    s = clock();
-    A = KaratsubaDNC(NUM1, NUM2);
-    t = clock() - s / CLOCKS_PER_SEC;
-    puts("KARATSUBA:");
-    PrintStr(A);
+    PrintString(A);
     Clean(A);
     printf("The time is %f sec\n", t);
     
     s = clock();
     A = Grid(NUM1, NUM2);
-    t = clock() - s / CLOCKS_PER_SEC;
+    t = (clock() - s) / CLOCKS_PER_SEC;
     puts("GRID:");
-    PrintStr(A);
+    PrintString(A);
+    Clean(A);
+    printf("The time is %f sec\n", t);
+
+    s = clock();
+    A = SimpleDNC(NUM1, NUM2);
+    t = (clock() - s) / CLOCKS_PER_SEC;
+    puts("SIMPLE DNC:");
+    PrintString(A);
+    Clean(A);
+    printf("The time is %f sec\n", t);
+    
+    s = clock();
+    A = Karatsuba(NUM1, NUM2);
+    t = (clock() - s) / CLOCKS_PER_SEC;
+    puts("KARATSUBA:");
+    PrintString(A);
     Clean(A);
     printf("The time is %f sec\n", t);
     return 0;

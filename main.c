@@ -2,11 +2,9 @@
 #include "multiplication.h"
 
 int main() {
-    int a,b;
-    scanf("%d",&a);
-    scanf("%d",&b);
-    printf("Native: %d\n",native(a,b));
-    printf("DnC: %d\n",dnc(a,b));
-    printf("Karatsuba: %d\n",karatsuba(a,b));
+    char a[256],b[256];
+    gets(a); //нужен аналог
+    gets(b);
+    dnc_helper(a, b);
     return 0;
 }

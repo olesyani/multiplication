@@ -3,8 +3,8 @@
 
 int main() {
     char a[256],b[256];
-    gets(a); //нужен аналог
+    gets(a);
     gets(b);
-    dnc_helper(a, b);
+    printf("%s",dnc(a,b));
     return 0;
 }

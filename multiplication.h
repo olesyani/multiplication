@@ -1,5 +1,5 @@
 //
-// Created by nikita on 01.06.2020.
+// Created by Nikita on 18.05.2020.
 //
 
 #ifndef DNC_MULTIPLICATION_H
@@ -17,3 +17,10 @@ char* dnc_odd(char *a, char *b);
 char* dnc_helper(char *a, char *b);
 char sum_helper_1(char a,char b, char c);
 char sum_helper_2(char a,char b);
+char* main_sum_helper(char *a,char *b);
+char* karatsuba(char *a,char *b);
+char* karatsuba_odd(char *a,char *b);
+char* karatsuba_helper(char *a,char *b);
+char difference_helper_1();
+char difference_helper_2();
+char* main_difference_helper(char *a,char *b);

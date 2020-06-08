@@ -1,5 +1,46 @@
 #include "mult.h"
 
+void Timer(void) {
+    int size1, size2, n;
+    double t1 = 0, t2 = 0, t3 = 0, t4 = 0, s;
+    srand(time(NULL));
+    puts("How many digits should be in the first number?");
+    scanf("%d", &size1);
+    puts("How many digits should be in the second number?");
+    scanf("%d", &size2);
+    puts("How many tests do you want?");
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++) {
+        INT_LONG NUM1, NUM2, A;
+        NUM1 = RandString(size1);
+        NUM2 = RandString(size2);
+        
+        s = clock();
+        A = Naive(NUM1, NUM2);
+        t1 += (clock() - s) / CLOCKS_PER_SEC;
+
+        s = clock();
+        A = SimpleDNC(NUM1, NUM2);
+        t2 += (clock() - s) / CLOCKS_PER_SEC;
+        
+        s = clock();
+        A = Karatsuba(NUM1, NUM2);
+        t3 += (clock() - s) / CLOCKS_PER_SEC;
+        
+        s = clock();
+        A = Grid(NUM1, NUM2);
+        t4 += (clock() - s) / CLOCKS_PER_SEC;
+    }
+    t1 /= n;
+    t2 /= n;
+    t3 /= n;
+    t4 /= n;
+    printf("naive: %f sec\n", t1);
+    printf("simple dnc: %f sec\n", t2);
+    printf("karatsuba: %f sec\n", t3);
+    printf("grid: %f sec\n", t4);
+}
+
 void PrintString(INT_LONG str) {
     int i = str.size;
     while (i != 0) {
@@ -46,7 +87,7 @@ INT_LONG RandString(int size) {
     }
     NUM.data[size-1] = rand()%9 + 1;
     NUM.size = size;
-    PrintString(NUM);
+    //PrintString(NUM);
     return NUM;
 }
 
@@ -73,14 +114,6 @@ INT_LONG Addition(INT_LONG num1, INT_LONG num2) {
         RES.data[i] = D;
         RES.size += 1;
     }
-    else {
-        i--;
-        while ((RES.data[i] == 0)&&(RES.size != 0)) {
-            free(RES.data[i]);
-            RES.size -= 1;
-            i--;
-        }
-    } 
     return RES;
 }
 
@@ -112,12 +145,7 @@ INT_LONG Subtraction(INT_LONG num1, INT_LONG num2) {
         }
         i++;
     }
-    i--;
-    while ((RES.data[i] == 0)&&(RES.size != 0)) {
-        free(RES.data[i]);
-        RES.size -= 1;
-        i--;
-    }
+    DeleteZero(RES);
     return RES;
 }
 
@@ -170,8 +198,9 @@ INT_LONG Naive(INT_LONG num1, INT_LONG num2) {
 }
 
 INT_LONG Grid(INT_LONG num1, INT_LONG num2) {
-    char MATRIX[num1.size][num2.size];
+    char ** MATRIX = (char**)malloc(sizeof(char*) * num1.size);
     for (int i = 0; i < num1.size; i++) {
+        MATRIX[i] = (char*)malloc(num2.size * sizeof(char));
         for (int j = 0; j < num2.size; j++) {
             MATRIX[i][j] = num1.data[i] * num2.data[j];
         }
@@ -256,20 +285,31 @@ INT_LONG ExtraDigits(INT_LONG num, int n) {
     return RESULT;
 }
 
+INT_LONG DeleteZero(INT_LONG num) {
+    int i = num.size - 1;
+    while ((num.data[i] == 0)&&(num.size != 0)) {
+        free(num.data[i]);
+        num.size -= 1;
+        i--;
+    }
+    return num;
+}
+
 INT_LONG SimpleDNC(INT_LONG num1, INT_LONG num2) {
     INT_LONG RESULT;
-    RESULT.data = (char*)malloc(1 * sizeof(char));
-    RESULT.data[0] = 0;
+    //RESULT.data = (char*)malloc(1 * sizeof(char));
+    //RESULT.data[0] = 0;
     RESULT.size = 0;
+    if (num1.size == 0 || num2.size == 0)
+        return RESULT;
     if (num1.size > num2.size)
         num2 = MakeEqual(num1, num2);
     else if (num2.size > num1.size)
         num1 = MakeEqual(num2, num1);
     int n = num1.size;
     int N = floor(n/2);
-    if (n == 0)
-        return RESULT;
     if (n == 1) {
+        RESULT.data = (char*)malloc(1 * sizeof(char));
         char a = num1.data[0] * num2.data[0];
         RESULT.data[0] = a % 10;
         RESULT.size = 1;
@@ -305,24 +345,28 @@ INT_LONG SimpleDNC(INT_LONG num1, INT_LONG num2) {
         else
             x1 = Addition(x4, x1);
         RESULT = x1;
+        RESULT = DeleteZero(RESULT);
         return RESULT;
     }
 }
 
 INT_LONG Karatsuba(INT_LONG num1, INT_LONG num2) {
     INT_LONG RESULT;
-    RESULT.data = (char*)malloc(1 * sizeof(char));
-    RESULT.data[0] = 0;
+    //RESULT.data = (char*)malloc(1 * sizeof(char));
+    //RESULT.data[0] = 0;
     RESULT.size = 0;
+    //num1 = DeleteZero(num1);
+    //num2 = DeleteZero(num2);
+    if (num1.size == 0 || num2.size == 0)
+        return RESULT;
     if (num1.size > num2.size)
         num2 = MakeEqual(num1, num2);
     else if (num2.size > num1.size)
         num1 = MakeEqual(num2, num1);
     int n = num1.size;
     int N = floor(n/2);
-    if (n == 0)
-        return RESULT;
     if (n == 1) {
+        RESULT.data = (char*)malloc(1 * sizeof(char));
         char a = num1.data[0] * num2.data[0];
         RESULT.data[0] = a % 10;
         RESULT.size = 1;
@@ -339,9 +383,9 @@ INT_LONG Karatsuba(INT_LONG num1, INT_LONG num2) {
     yR = Divide(num2, 0, N);
     yL = Divide(num2, N, n);
     INT_LONG X1, X2, X3;
-    X1.size = 0;
-    X2.size = 0;
-    X3.size = 0;
+    //X1.size = 0;
+    //X2.size = 0;
+    //X3.size = 0;
     X1 = Karatsuba(xL, yL);
     X2 = Karatsuba(xR, yR);
     if (xR.size > xL.size)
@@ -380,5 +424,6 @@ INT_LONG Karatsuba(INT_LONG num1, INT_LONG num2) {
         X3 = ExtraDigits(X3, N);
         RESULT = Subtraction(RESULT, X3);
     }
+    RESULT = DeleteZero(RESULT);
     return RESULT;
 }

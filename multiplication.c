@@ -86,36 +86,33 @@ char* err_repairer(char *result, int a, int b) {
 
 char* dnc(char *a, char *b) {
     int num1 = number_of_digits(a), num2 = number_of_digits(b);
-    if((num1==1)&&(num2==1)) {
-        char *result = (char*)calloc(num1+num2+1,sizeof(char));
-        result = native(a,b);
-        return result;
-    } else if((num1%2==1)||(num2%2==1)) {
-        char *result = (char*)calloc(num1+num2+1,sizeof(char));
-        result = dnc_odd(a,b);
-        return result;
-    } else {
-        char *result = (char*)calloc(num1+num2+1,sizeof(char));
-        result = dnc_helper(a,b);
-        return result;
-    }
-}
-
-char* dnc_helper(char *a, char *b) {
-    int num1 = number_of_digits(a), num2 = number_of_digits(b);
     int mark = 0;
+    if((num1==1)&&(num2==1)) {
+        return native(a,b);
+    }
+    if((num1%2==1)&&(num2%2==1)) {
+        a[num1] = '0';
+        b[num2] = '0';
+        mark = mark+2;
+    } else if(num1%2==1) {
+        a[num1] = '0';
+        mark++;
+    } else if(num2%2==1) {
+        b[num2] = '0';
+        mark++;
+    }
+    num1 = number_of_digits(a);
+    num2 = number_of_digits(b);
     if(num1>num2) {
         for(int i = num2;i<num1;i++) {
             b[i] = '0';
             mark++;
         }
-        b[num1] = 0;
     } else if(num2>num1) {
         for(int i = num1;i<num2;i++) {
             a[i] = '0';
             mark++;
         }
-        a[num2] = 0;
     }
     num1 = number_of_digits(a);
     num2 = number_of_digits(b);
@@ -170,7 +167,7 @@ char* dnc_helper(char *a, char *b) {
     char *result = (char *) calloc(num1 + num2 + 1, sizeof(char));
     result = main_sum_helper(intermediate_result,x4);
     int numres = number_of_digits(result);
-    if(result[0]=='0') {
+    while(result[0]=='0') {
         for(int i = 0;i<numres;i++) {
             result[i] = result[i+1];
         }
@@ -190,7 +187,7 @@ char* dnc_helper(char *a, char *b) {
     if(mark==0) {
         return result;
     } else {
-        for(int i = numres-mark-1;i<numres;i++) {
+        for(int i = numres-mark;i<numres;i++) {
             result[i] = 0;
         }
         return result;
@@ -252,38 +249,6 @@ char* main_sum_helper(char *a,char *b) {
             sum[i+1] = sum_helper_2(a[i],b[i]);
         }
         return sum;
-    }
-}
-
-char* dnc_odd(char *a, char *b) {
-    int num1 = number_of_digits(a),num2 = number_of_digits(b);
-    if((num1%2==1)&&(num2%2==1)) {
-        a[num1] = '0';
-        b[num2] = '0';
-        a[num1+1] = 0;
-        b[num2+1] = 0;
-        char *result = (char *) calloc(num1 + num2 + 1, sizeof(char));
-        result = dnc_helper(a,b);
-        int numres = number_of_digits(result);
-        result[numres-1] = 0;
-        result[numres-2] = 0;
-        return result;
-    } else if(num1%2==1) {
-        a[num1] = '0';
-        a[num1+1] = 0;
-        char *result = (char *) calloc(num1 + num2 + 1, sizeof(char));
-        result = dnc_helper(a,b);
-        int numres = number_of_digits(result);
-        result[numres-1] = '0';
-        return result;
-    } else {
-        b[num2] = '0';
-        b[num2+1] = 0;
-        char *result = (char *) calloc(num1 + num2 + 1, sizeof(char));
-        result = dnc_helper(a,b);
-        int numres = number_of_digits(result);
-        result[numres-1] = 0;
-        return result;
     }
 }
 

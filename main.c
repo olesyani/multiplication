@@ -6,10 +6,9 @@
 int main() {
     srand(time(NULL));
     int c,d;
-    c = rand()%11;
-    d = rand()%11;
-    char *a = (char*)calloc(c+1,sizeof(char));
-    char *b = (char*)calloc(d+1,sizeof(char));
+    scanf("%d %d",&c,&d);
+    char *a = (char *) calloc(c+1,sizeof(char));
+    char *b = (char *) calloc(d+1,sizeof(char));
     a[0] = 49+rand()%9;
     b[0] = 49+rand()%9;
     printf("%c",a[0]);
@@ -23,6 +22,11 @@ int main() {
         b[i] = 48+rand()%10;
         printf("%c",b[i]);
     }
-    printf("\n%s\n",native(a,b));
+    double s,t1,t2;
+    s = clock();
+    printf("\n%s",dnc(a,b));
+    t2 = (clock()-s) / CLOCKS_PER_SEC;
+    printf("\n%f",t2);
     return 0;
 }
+

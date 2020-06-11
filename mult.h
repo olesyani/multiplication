@@ -12,7 +12,6 @@ typedef struct int_long {
     int size;
 } INT_LONG;
 
-void Stopwatch(void);
 void PrintString(INT_LONG str);
 void Clean(INT_LONG num);
 char IsBigger(INT_LONG num1, INT_LONG num2); //which number is bigger

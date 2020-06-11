@@ -1,8 +1,8 @@
 #include "mult.h"
 
-void Timer(void) {
+void Stopwatch(void) {
     int size1, size2, n;
-    double t1 = 0, t2 = 0, t3 = 0, t4 = 0, s;
+    double t1 = 0, t2 = 0, t3 = 0, s;
     srand(time(NULL));
     puts("How many digits should be in the first number?");
     scanf("%d", &size1);
@@ -18,27 +18,21 @@ void Timer(void) {
         s = clock();
         A = Naive(NUM1, NUM2);
         t1 += (clock() - s) / CLOCKS_PER_SEC;
-
-        s = clock();
-        A = SimpleDNC(NUM1, NUM2);
-        t2 += (clock() - s) / CLOCKS_PER_SEC;
         
         s = clock();
         A = Karatsuba(NUM1, NUM2);
-        t3 += (clock() - s) / CLOCKS_PER_SEC;
+        t2 += (clock() - s) / CLOCKS_PER_SEC;
         
         s = clock();
         A = Grid(NUM1, NUM2);
-        t4 += (clock() - s) / CLOCKS_PER_SEC;
+        t3 += (clock() - s) / CLOCKS_PER_SEC;
     }
     t1 /= n;
     t2 /= n;
     t3 /= n;
-    t4 /= n;
     printf("naive: %f sec\n", t1);
-    printf("simple dnc: %f sec\n", t2);
-    printf("karatsuba: %f sec\n", t3);
-    printf("grid: %f sec\n", t4);
+    printf("karatsuba: %f sec\n", t2);
+    printf("grid: %f sec\n", t3);
 }
 
 void PrintString(INT_LONG str) {
@@ -79,6 +73,7 @@ char IsBigger(INT_LONG num1, INT_LONG num2) {
         return 2;
 }
 
+
 INT_LONG RandString(int size) {
     INT_LONG NUM;
     NUM.data = (char*)malloc(size * sizeof(char));
@@ -87,7 +82,6 @@ INT_LONG RandString(int size) {
     }
     NUM.data[size-1] = rand()%9 + 1;
     NUM.size = size;
-    //PrintString(NUM);
     return NUM;
 }
 
@@ -297,8 +291,6 @@ INT_LONG DeleteZero(INT_LONG num) {
 
 INT_LONG SimpleDNC(INT_LONG num1, INT_LONG num2) {
     INT_LONG RESULT;
-    //RESULT.data = (char*)malloc(1 * sizeof(char));
-    //RESULT.data[0] = 0;
     RESULT.size = 0;
     if (num1.size == 0 || num2.size == 0)
         return RESULT;
@@ -352,11 +344,7 @@ INT_LONG SimpleDNC(INT_LONG num1, INT_LONG num2) {
 
 INT_LONG Karatsuba(INT_LONG num1, INT_LONG num2) {
     INT_LONG RESULT;
-    //RESULT.data = (char*)malloc(1 * sizeof(char));
-    //RESULT.data[0] = 0;
     RESULT.size = 0;
-    //num1 = DeleteZero(num1);
-    //num2 = DeleteZero(num2);
     if (num1.size == 0 || num2.size == 0)
         return RESULT;
     if (num1.size > num2.size)
@@ -383,9 +371,6 @@ INT_LONG Karatsuba(INT_LONG num1, INT_LONG num2) {
     yR = Divide(num2, 0, N);
     yL = Divide(num2, N, n);
     INT_LONG X1, X2, X3;
-    //X1.size = 0;
-    //X2.size = 0;
-    //X3.size = 0;
     X1 = Karatsuba(xL, yL);
     X2 = Karatsuba(xR, yR);
     if (xR.size > xL.size)

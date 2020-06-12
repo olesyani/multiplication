@@ -9,15 +9,6 @@ void PrintString(INT_LONG str) {
     puts("");
 }
 
-void Clean(INT_LONG num) {
-    if (num.size > 0) {
-        for (int i = num.size - 1; i <= 0; i++) {
-            free(num.data[i]);
-        }
-        free(num.data);
-    }
-}
-
 char IsBigger(INT_LONG num1, INT_LONG num2) {
     int size1 = num1.size;
     int size2 = num2.size;
@@ -38,8 +29,19 @@ char IsBigger(INT_LONG num1, INT_LONG num2) {
         return 2;
 }
 
+char Errors(INT_LONG alg1, INT_LONG alg2, INT_LONG alg3) {
+    if (strcmp(alg1.data, alg2.data) == 0) {
+        if (strcmp(alg1.data, alg3.data) == 0)
+            return 0;
+        else
+            return 1;
+    }
+    else
+        return 1;
+}
 
-INT_LONG RandString(int size) {
+
+INT_LONG RandNumber(int size) {
     INT_LONG NUM;
     NUM.data = (char*)malloc(size * sizeof(char));
     for (int i = 0; i < size-1; i++) {
@@ -110,16 +112,14 @@ INT_LONG Subtraction(INT_LONG num1, INT_LONG num2) {
 
 INT_LONG NaiveMultiplication(INT_LONG num, char n, int pos) {
     INT_LONG RES;
+    if (n == 0) {
+        RES.size = 0;
+        return RES;
+    }
     RES.data = (char*)malloc(((num.size) + pos) * (sizeof(char)));
     RES.size = (num.size) + pos;
     int i = pos;
     char D = 0;
-    if (num.size == 0) {
-        RES.data = (char*)malloc(1 * sizeof(char));
-        RES.data[0] = 0;
-        RES.size = 0;
-        return RES;
-    }
     for (int j = 0; j < pos; j++) {
         RES.data[j] = 0;
     }
@@ -164,21 +164,21 @@ INT_LONG Grid(INT_LONG num1, INT_LONG num2) {
             MATRIX[i][j] = num1.data[i] * num2.data[j];
         }
     }
-    INT_LONG DIAGONAL_SUM;
-    DIAGONAL_SUM.data = (char*)malloc((num1.size + num2.size - 1) * sizeof(char));
-    DIAGONAL_SUM.size = num1.size + num2.size - 1;
-    long int previous = 0;
+    INT_LONG RESULT;
+    RESULT.data = (char*)malloc((num1.size + num2.size - 1) * sizeof(char));
+    RESULT.size = num1.size + num2.size - 1;
+    long int D = 0;
     int n = 0;
     for (int i = 0; i < num1.size; i++) {
         int k = i;
-        long int add = 0;
+        int add = 0;
         for (int j = 0; j < num2.size && k >= 0; j++, k--) {
             add += MATRIX[k][j];
         }
-        add += previous;
-        previous = add / 10;
+        add += D;
+        D = add / 10;
         add = add % 10;
-        DIAGONAL_SUM.data[n] = add;
+        RESULT.data[n] = add;
         n++;
     }
     for (int k = 1; k < num2.size; k++) {
@@ -190,18 +190,18 @@ INT_LONG Grid(INT_LONG num1, INT_LONG num2) {
             j++;
             i--;
         }
-        add += previous;
-        previous = add / 10;
+        add += D;
+        D = add / 10;
         add = add % 10;
-        DIAGONAL_SUM.data[n] = add;
+        RESULT.data[n] = add;
         n++;
     }
-    if (previous > 0) {
-        DIAGONAL_SUM.data[n] = (char)malloc(1 * sizeof(char));
-        DIAGONAL_SUM.data[n] = previous;
-        DIAGONAL_SUM.size += 1;
+    if (D > 0) {
+        RESULT.data[n] = (char)malloc(1 * sizeof(char));
+        RESULT.data[n] = D;
+        RESULT.size += 1;
     }
-    return DIAGONAL_SUM;
+    return RESULT;
 }
 
 INT_LONG Divide(INT_LONG num, int first, int last) {
@@ -252,59 +252,6 @@ INT_LONG DeleteZero(INT_LONG num) {
         i--;
     }
     return num;
-}
-
-INT_LONG SimpleDNC(INT_LONG num1, INT_LONG num2) {
-    INT_LONG RESULT;
-    RESULT.size = 0;
-    if (num1.size == 0 || num2.size == 0)
-        return RESULT;
-    if (num1.size > num2.size)
-        num2 = MakeEqual(num1, num2);
-    else if (num2.size > num1.size)
-        num1 = MakeEqual(num2, num1);
-    int n = num1.size;
-    int N = floor(n/2);
-    if (n == 1) {
-        RESULT.data = (char*)malloc(1 * sizeof(char));
-        char a = num1.data[0] * num2.data[0];
-        RESULT.data[0] = a % 10;
-        RESULT.size = 1;
-        if (a / 10 > 0) {
-            RESULT.data[1] = (char)malloc(1 * sizeof(char));
-            RESULT.data[1] = a / 10;
-            RESULT.size = 2;
-        }
-        return RESULT;
-    }
-    else {
-        INT_LONG xR, xL, yR, yL;
-        xR = Divide(num1, 0, N);
-        xL = Divide(num1, N, n);
-        yR = Divide(num2, 0, N);
-        yL = Divide(num2, N, n);
-        INT_LONG x1 = SimpleDNC(xL, yL);
-        INT_LONG x2 = SimpleDNC(xL, yR);
-        INT_LONG x3 = SimpleDNC(xR, yL);
-        INT_LONG x4 = SimpleDNC(xR, yR);
-        x1 = ExtraDigits(x1, 2 * N);
-        if (x2.size > x3.size)
-            x2 = Addition(x2, x3);
-        else
-            x2 = Addition(x3, x2);
-        x2 = ExtraDigits(x2, N);
-        if (x1.size > x2.size)
-            x1 = Addition(x1, x2);
-        else
-            x1 = Addition(x2, x1);
-        if (x1.size > x4.size)
-            x1 = Addition(x1, x4);
-        else
-            x1 = Addition(x4, x1);
-        RESULT = x1;
-        RESULT = DeleteZero(RESULT);
-        return RESULT;
-    }
 }
 
 INT_LONG Karatsuba(INT_LONG num1, INT_LONG num2) {

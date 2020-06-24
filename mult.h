@@ -25,5 +25,6 @@ INT_LONG Divide(INT_LONG num, int first, int last); //splitting numbers for simp
 INT_LONG MakeEqual(INT_LONG num1, INT_LONG num2); //making digits of two numbers equal
 INT_LONG ExtraDigits(INT_LONG num, int n); //extra digits '0'
 INT_LONG DeleteZero(INT_LONG num); //delete extra zeros
+INT_LONG SimpleDNC(INT_LONG num1, INT_LONG num2); //simple DNC alg
 INT_LONG Karatsuba(INT_LONG num1, INT_LONG num2); //karatsuba alg
 #endif

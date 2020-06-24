@@ -33,11 +33,19 @@ char Errors(INT_LONG alg1, INT_LONG alg2, INT_LONG alg3) {
     if (strcmp(alg1.data, alg2.data) == 0) {
         if (strcmp(alg1.data, alg3.data) == 0)
             return 0;
-        else
+        else {
+            PrintString(alg1);
+            PrintString(alg2);
+            PrintString(alg3);
             return 1;
+        }
     }
-    else
+    else {
+        PrintString(alg1);
+        PrintString(alg2);
+        PrintString(alg3);
         return 1;
+    }
 }
 
 
@@ -254,7 +262,7 @@ INT_LONG DeleteZero(INT_LONG num) {
     return num;
 }
 
-INT_LONG Karatsuba(INT_LONG num1, INT_LONG num2) {
+INT_LONG SimpleDNC(INT_LONG num1, INT_LONG num2) {
     INT_LONG RESULT;
     RESULT.size = 0;
     if (num1.size == 0 || num2.size == 0)
@@ -277,6 +285,59 @@ INT_LONG Karatsuba(INT_LONG num1, INT_LONG num2) {
         }
         return RESULT;
     }
+    else {
+        INT_LONG xR, xL, yR, yL;
+        xR = Divide(num1, 0, N);
+        xL = Divide(num1, N, n);
+        yR = Divide(num2, 0, N);
+        yL = Divide(num2, N, n);
+        INT_LONG x1 = SimpleDNC(xL, yL);
+        INT_LONG x2 = SimpleDNC(xL, yR);
+        INT_LONG x3 = SimpleDNC(xR, yL);
+        INT_LONG x4 = SimpleDNC(xR, yR);
+        x1 = ExtraDigits(x1, 2 * N);
+        if (x2.size > x3.size)
+            x2 = Addition(x2, x3);
+        else
+            x2 = Addition(x3, x2);
+        x2 = ExtraDigits(x2, N);
+        if (x1.size > x2.size)
+            x1 = Addition(x1, x2);
+        else
+            x1 = Addition(x2, x1);
+        if (x1.size > x4.size)
+            x1 = Addition(x1, x4);
+        else
+            x1 = Addition(x4, x1);
+        RESULT = x1;
+        RESULT = DeleteZero(RESULT);
+        return RESULT;
+    }
+}
+
+INT_LONG Karatsuba(INT_LONG num1, INT_LONG num2) {
+    INT_LONG RESULT;
+    RESULT.size = 0;
+    if (num1.size == 0 || num2.size == 0)
+        return RESULT;
+    if (num1.size == 1 && num2.size == 1) {
+        RESULT.data = (char*)malloc(1 * sizeof(char));
+        char a = num1.data[0] * num2.data[0];
+        RESULT.data[0] = a % 10;
+        RESULT.size = 1;
+        if (a / 10 > 0) {
+            RESULT.data[1] = (char)malloc(1 * sizeof(char));
+            RESULT.data[1] = a / 10;
+            RESULT.size = 2;
+        }
+        return RESULT;
+    }
+    if (num1.size > num2.size)
+        num2 = MakeEqual(num1, num2);
+    else if (num2.size > num1.size)
+        num1 = MakeEqual(num2, num1);
+    int n = num1.size;
+    int N = floor(n/2);
     INT_LONG xR, xL, yR, yL;
     xR = Divide(num1, 0, N);
     xL = Divide(num1, N, n);
